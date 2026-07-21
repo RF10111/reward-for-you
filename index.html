@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Misi Kelulusan Ayang 🚀🎓</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #050814;
+      color: #ffffff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      touch-action: none; 
+    }
+
+    /* Background Bintang Langit */
+    .space-background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
+      z-index: -1;
+    }
+
+    /* Screen Management (Anti-Bug Transisi) */
+    .screen {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
+      z-index: 1;
+    }
+
+    .screen.active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 10;
+    }
+
+    /* Tipografi Utama */
+    .header-text h1, .header-text h2 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+      color: #00ffff;
+    }
+    .header-text p {
+      font-size: 0.95rem;
+      color: #a0c4ff;
+      margin-bottom: 15px;
+    }
+
+    /* Tombol Utama (Bisa disentuh gampang di HP) */
+    .space-btn {
+      background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+      border: none;
+      padding: 15px 30px;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4);
+      transition: transform 0.2s, filter 0.2s;
+      width: 100%;
+      max-width: 300px;
+      margin-top: 20px;
+    }
+    .space-btn:active { transform: scale(0.95); }
+    .space-btn:disabled { filter: grayscale(1); opacity: 0.5; pointer-events: none; }
+
+    /* Glassmorphism Box untuk Hadiah & Pesan */
+    .glass-box {
+      width: 95%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 25px 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .rocket-container {
+      font-size: 4rem;
+      margin-bottom: 10px;
+      transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .rocket-launch {
+      transform: translateY(-500px) scale(0.5); /* Efek terbang */
+    }
+
+    .fuel-bar-bg {
+      width: 100%; max-width: 300px;
+      height: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .fuel-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff416c, #ff4b2b);
+      transition: width 0.5s ease-out;
+      box-shadow: 0 0 10px #ff4b2b;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      max-width: 300px;
+    }
+    .quiz-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #00ffff;
+      padding: 12px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quiz-btn:active { background: rgba(0, 255, 255, 0.3); }
+    .quiz-btn.wrong { background: rgba(255, 0, 0, 0.5); border-color: red; animation: shake 0.4s; }
+    .quiz-btn.correct { background: rgba(0, 255, 0, 0.5); border-color: lime; }
+
+    .constellation-container {
+      position: relative;
+      width: 100%; max-width: 350px;
+      height: 50vh; max-height: 400px;
+      margin-top: 10px;
+    }
+    #constellation-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    
+    .line-path {
+      stroke: #ffd700; stroke-width: 2.5; stroke-linecap: round; filter: drop-shadow(0 0 4px #ffd700);
+      stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: drawLine 1s ease forwards;
+    }
+    @keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+    .star-point {
+      position: absolute; width: 50px; height: 50px;
+      transform: translate(-50%, -50%);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 10;
+    }
+    .star-core {
+      width: 15px; height: 15px; background: #fff; border-radius: 50%;
+      box-shadow: 0 0 10px #fff, 0 0 20px #00ffff;
+      transition: all 0.3s; color: transparent; font-size: 10px; font-weight: bold;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .star-point.disabled { pointer-events: none; opacity: 0.5; }
+    .star-point.next-target .star-core { animation: pulseStar 1.5s infinite; color: #050814; }
+    .star-point.active-star .star-core { background: #ffd700; box-shadow: 0 0 15px #ffd700, 0 0 30px #ffaa00; transform: scale(1.4); color: #000; }
+
+    .meteor-slots {
+      display: flex; justify-content: center; gap: 10px; margin-bottom: 30px;
+    }
+    .meteor-slot {
+      width: 40px; height: 50px;
+      border-bottom: 3px solid #00ffff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; font-weight: bold; color: #ffd700; text-shadow: 0 0 10px #ffd700;
+    }
+    .meteor-area {
+      position: relative; width: 100%; max-width: 350px; height: 250px;
+    }
+    .meteor-btn {
+      position: absolute;
+      width: 55px; height: 55px;
+      background: radial-gradient(circle at 30% 30%, #555, #222);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; font-weight: bold; cursor: pointer;
+      box-shadow: inset -5px -5px 10px rgba(0,0,0,0.7), 0 5px 15px rgba(255,100,0,0.4);
+      border: 2px solid #888;
+      transition: transform 0.2s;
+    }
+    .meteor-btn:active { transform: scale(0.9); }
+    .meteor-btn.hidden-meteor { opacity: 0; pointer-events: none; transform: scale(0); }
+    .meteor-btn::after {
+      content: '🔥'; position: absolute; top: -15px; right: -15px; font-size: 1.5rem; transform: rotate(45deg); z-index: -1;
+    }
+
+    .reward-img {
+      width: 100%; max-width: 250px;
+      border-radius: 15px; margin: 15px 0;
+      border: 2px solid #00ffff;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+      object-fit: cover;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      50% { transform: translateX(10px); }
+      75% { transform: translateX(-10px); }
+    }
+    @keyframes pulseStar {
+      0% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(0, 255, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0); }
+    }
+
+    #screen-finale { touch-action: none; overflow: hidden; }
+    .orbit-gallery {
+      position: relative; width: 100%; max-width: 500px; height: 50vh; display: flex; align-items: center; justify-content: center; margin-top: 20px;
+    }
+    .central-planet {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 90px; height: 90px; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #4cc9f0, #3a0ca3);
+      box-shadow: 0 0 40px rgba(76, 201, 240, 0.5), inset -15px -15px 30px rgba(0,0,0,0.6); z-index: 50;
+    }
+    .central-planet::after {
+      content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotateX(75deg);
+      width: 160px; height: 160px; border-radius: 50%;
+      border: 8px solid rgba(255, 255, 255, 0.15); border-top-color: transparent; border-bottom-color: rgba(255, 255, 255, 0.5);
+    }
+    .orbit-item {
+      position: absolute; top: 50%; left: 50%; width: 75px; height: 100px;
+      border: 3px solid rgba(255, 255, 255, 0.8); border-radius: 8px; overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 255, 255, 0.3); background: #000;
+      transform-origin: center center; transition: filter 0.3s, border-color 0.3s; cursor: pointer;
+    }
+    .orbit-item img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+    .orbit-item.paused {
+      border-color: #ffd700; box-shadow: 0 15px 40px rgba(255, 215, 0, 0.9); z-index: 1000 !important; filter: brightness(1.2) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio Element (Musik diputar otomatis setelah interaksi pertama) -->
+  <audio id="bgm" loop preload="auto">
+    <source src="https://assets.mixkit.co/music/preview/mixkit-space-journey-284.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="space-background"></div>
+
+  <section id="screen-kuis" class="screen active">
+    <div class="glass-box">
+      <h2>Misi 1: Isi Bensin 🚀</h2>
+      <p id="quiz-question">Pertanyaan kuis muncul di sini...</p>
+      
+      <div class="rocket-container" id="rocket-icon">🚀</div>
+      
+      <div class="fuel-bar-bg">
+        <div class="fuel-bar-fill" id="fuel-fill"></div>
+      </div>
+
+      <div class="quiz-options" id="quiz-options">
+        <!-- Tombol kuis di-generate via JS -->
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-reward-1" class="screen">
+    <div class="glass-box">
+      <h2>Hadiah Misi 1 Terbuka! 🎁</h2>
+      <img src="https://placehold.co/300x300/1a1a2e/ffd700?text=Hadiah+Bebas+Ngomel" alt="Hadiah 1" class="reward-img">
+      <p>Yey bensin roket full! Ini hadiah pertama buat kamu: <b>Voucher Bebas Ngomel 1 Hari Full!</b> (Bisa ditukarkan kapan aja 💖)</p>
+      <button class="space-btn" onclick="goToScreen('screen-rasi')">Lanjut Misi 2 🌟</button>
+    </div>
+  </section>
+
+  <section id="screen-rasi" class="screen">
+    <div class="header-text">
+      <h2>Misi 2: Rasi Bintang ✨</h2>
+      <p>Sentuh bintang berurutan (1-6) untuk membuka kodenya!</p>
+    </div>
+    <div class="constellation-container" id="const-container">
+      <svg id="constellation-lines"></svg>
+      <div id="stars-container"></div>
+    </div>
+  </section>
+
+  <section id="screen-reward-2" class="screen">
+    <div class="glass-box">
+      <h2>Hadiah Misi 2 Terbuka! 🎁</h2>
+      <img src="https://placehold.co/300x300/1a1a2e/00ffff?text=Voucher+Makan+Enak" alt="Hadiah 2" class="reward-img">
+      <p>Wah bentuk topi toga! Hadiah kedua buat yang abis sidang: <b>Voucher Makan Enak Sepuasnya Ditraktir Ayang!</b> 🍣🍱</p>
+      <button class="space-btn" onclick="goToScreen('screen-meteor')">Lanjut Misi Terakhir ☄️</button>
+    </div>
+  </section>
+
+  <section id="screen-meteor" class="screen">
+    <div class="header-text">
+      <h2>Misi Terakhir: Hujan Meteor ☄️</h2>
+      <p>Tangkap meteor dalam urutan yang benar untuk membentuk kata rahasia!</p>
+    </div>
+    
+    <div class="meteor-slots" id="meteor-slots">
+      <!-- 5 Slot Huruf: L U L U S -->
+      <div class="meteor-slot"></div><div class="meteor-slot"></div><div class="meteor-slot"></div><div class="meteor-slot"></div><div class="meteor-slot"></div>
+    </div>
+
+    <div class="meteor-area" id="meteor-area">
+      <!-- Tombol meteor di-generate via JS -->
+    </div>
+  </section>
+
+  <section id="screen-finale" class="screen">
+    <div class="header-text">
+      <h2 style="color: #ffd700;">🎉 Happy Graduation, Sayang! 🎓</h2>
+      <p id="final-typewriter" style="min-height: 45px;"></p>
+    </div>
+    
+    <div class="orbit-gallery" id="orbit-center">
+      <div class="central-planet"></div>
+      <!-- 8 Foto Mengorbit (Ganti SRC ini dengan link foto asli) -->
+      <div class="orbit-item"><img src="https://picsum.photos/id/1011/300/400" alt="M1"></div>
+      <div class="orbit-item"><img src="https://picsum.photos/id/1012/300/400" alt="M2"></div>
+      <div class="orbit-item"><img src="https://picsum.photos/id/1025/400/300" alt="M3"></div>
+      <div class="orbit-item"><img src="https://picsum.photos/id/1033/300/400" alt="M4"></div>
+      <div class="orbit-item"><img src="https://picsum.photos/id/1043/400/300" alt="M5"></div>
+      <div class="orbit-item"><img src="https://picsum.photos/id/1062/300/400" alt="M6"></div>
+      <div class="orbit-item"><img src="https://picsum.photos/id/1074/400/300" alt="M7"></div>
+      <div class="orbit-item"><img src="https://picsum.photos/id/1084/300/400" alt="M8"></div>
+    </div>
+  </section>
+
+
+  <script>
+    // Helper untuk pindah layar dengan transisi CSS
+    function goToScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(screenId);
+      target.classList.add('active');
+
+      // Setup spesifik ketika layar tertentu aktif
+      if (screenId === 'screen-rasi') setTimeout(initConstellation, 500); // Tunggu transisi selesai
+      if (screenId === 'screen-meteor') initMeteorScramble();
+      if (screenId === 'screen-finale') {
+        typeWriterFinale();
+        initOrbitGallery();
+      }
+    }
+
+    // Play musik (dipanggil di klik pertama untuk menghindari autoplay block)
+    let audioPlayed = false;
+    function playAudioSafe() {
+      if (!audioPlayed) {
+        const bgm = document.getElementById('bgm');
+        bgm.volume = 0.4;
+        bgm.play().catch(e => console.log("Audio play blocked by browser", e));
+        audioPlayed = true;
+      }
+    }
+
+    const quizData = [
+      { q: "Siapa supporter nomor 1 kamu waktu begadang ngetik revisian?", options: ["Kucing Jalanan", "Aku (Pacar Kamu) 💖", "Satpam Kampus"], answer: 1 },
+      { q: "Minuman penyelamat nyawa waktu Bab 4 stuck?", options: ["Air Mata", "Kopi Susu ☕", "Oli Samping"], answer: 1 },
+      { q: "Gelar apa yang paling aku tunggu dari kamu kedepannya?", options: ["Nyonya (Nama Gw) 👰‍♀️", "Direktur PT", "Menteri Keuangan"], answer: 0 }
+    ];
+    let currentQuestion = 0;
+
+    function renderQuiz() {
+      if (currentQuestion >= quizData.length) {
+        // Kuis Selesai -> Luncurkan Roket!
+        document.getElementById('fuel-fill').style.width = '100%';
+        document.getElementById('rocket-icon').classList.add('rocket-launch');
+        setTimeout(() => goToScreen('screen-reward-1'), 1200);
+        return;
+      }
+
+      const qObj = quizData[currentQuestion];
+      document.getElementById('quiz-question').innerText = qObj.q;
+      
+      const optsContainer = document.getElementById('quiz-options');
+      optsContainer.innerHTML = '';
+      
+      qObj.options.forEach((optText, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-btn';
+        btn.innerText = optText;
+        btn.onclick = () => handleQuizAnswer(index, btn, qObj.answer);
+        optsContainer.appendChild(btn);
+      });
+
+      // Update Fuel Bar (33% per jawaban benar)
+      const progress = (currentQuestion / quizData.length) * 100;
+      document.getElementById('fuel-fill').style.width = `${progress}%`;
+    }
+
+    function handleQuizAnswer(selectedIndex, btn, correctIndex) {
+      playAudioSafe(); // Trigger audio
+      
+      // Matikan semua tombol sementara
+      const allBtns = document.querySelectorAll('.quiz-btn');
+      allBtns.forEach(b => b.style.pointerEvents = 'none');
+
+      if (selectedIndex === correctIndex) {
+        btn.classList.add('correct');
+        currentQuestion++;
+        setTimeout(renderQuiz, 800);
+      } else {
+        btn.classList.add('wrong');
+        if (navigator.vibrate) navigator.vibrate(200); // Getar kalau salah
+        setTimeout(() => {
+          btn.classList.remove('wrong');
+          allBtns.forEach(b => b.style.pointerEvents = 'auto');
+        }, 500);
+      }
+    }
+    renderQuiz(); // Mulai kuis saat load
+
+    const starsData = [
+      { id: 1, x: 50, y: 15, label: "1" }, // Atas
+      { id: 2, x: 85, y: 35, label: "2" }, // Kanan
+      { id: 3, x: 50, y: 55, label: "3" }, // Bawah
+      { id: 4, x: 15, y: 35, label: "4" }, // Kiri
+      { id: 5, x: 50, y: 15, label: "5" }, // Balik ke Atas
+      { id: 6, x: 85, y: 75, label: "★"}   // Tali toga
+    ];
+    let starStep = 0;
+    const constContainer = document.getElementById('const-container');
+    const starsCont = document.getElementById('stars-container');
+    const svgLines = document.getElementById('constellation-lines');
+    let isConstellationInit = false;
+
+    function initConstellation() {
+      if (isConstellationInit) return; // Mencegah double render
+      isConstellationInit = true;
+      starsCont.innerHTML = ''; svgLines.innerHTML = ''; starStep = 0;
+
+      starsData.forEach((star, index) => {
+        const starWrapper = document.createElement('div');
+        starWrapper.className = 'star-point';
+        if (index !== 0) starWrapper.classList.add('disabled');
+        if (index === 0) starWrapper.classList.add('next-target');
+
+        starWrapper.style.left = `${star.x}%`;
+        starWrapper.style.top = `${star.y}%`;
+        
+        const starCore = document.createElement('div');
+        starCore.className = 'star-core';
+        starCore.innerText = star.label;
+        starWrapper.appendChild(starCore);
+
+        starWrapper.addEventListener('click', () => handleStarClick(index, starWrapper));
+        starsCont.appendChild(starWrapper);
+      });
+    }
+
+    function handleStarClick(index, wrapper) {
+      if (index === starStep) {
+        wrapper.classList.remove('next-target', 'disabled');
+        wrapper.classList.add('active-star');
+
+        if (starStep > 0) drawConstLine(starStep - 1, starStep);
+        starStep++;
+
+        if (starStep < starsData.length) {
+          const nextStar = starsCont.children[starStep];
+          nextStar.classList.remove('disabled');
+          nextStar.classList.add('next-target');
+        }
+
+        if (starStep === starsData.length) {
+          document.querySelectorAll('.line-path').forEach(l => l.style.stroke = '#ffffff');
+          setTimeout(() => goToScreen('screen-reward-2'), 1500);
+        }
+      } else {
+        wrapper.classList.remove('shake');
+        void wrapper.offsetWidth; 
+        wrapper.classList.add('shake');
+        if (navigator.vibrate) navigator.vibrate(200);
+      }
+    }
+
+    function drawConstLine(idx1, idx2) {
+      const rect = constContainer.getBoundingClientRect();
+      const s1 = starsData[idx1], s2 = starsData[idx2];
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', (s1.x / 100) * rect.width);
+      line.setAttribute('y1', (s1.y / 100) * rect.height);
+      line.setAttribute('x2', (s2.x / 100) * rect.width);
+      line.setAttribute('y2', (s2.y / 100) * rect.height);
+      line.setAttribute('class', 'line-path');
+      svgLines.appendChild(line);
+    }
+
+    // Redraw SVG pas HP di-rotate
+    window.addEventListener('resize', () => {
+      if(isConstellationInit && starStep > 0) {
+        svgLines.innerHTML = '';
+        for (let i = 0; i < starStep - 1; i++) drawConstLine(i, i + 1);
+      }
+    });
+
+    const targetWord = ['L', 'U', 'L', 'U', 'S'];
+    let meteorStep = 0;
+    
+    function initMeteorScramble() {
+      const area = document.getElementById('meteor-area');
+      area.innerHTML = '';
+      meteorStep = 0;
+      document.querySelectorAll('.meteor-slot').forEach(s => s.innerText = '');
+
+      // Acak posisi dan kasih huruf
+      const shuffledIndices = [0, 1, 2, 3, 4].sort(() => Math.random() - 0.5);
+      // Posisi manual agar menyebar di box 350x250
+      const positions = [
+        {top: '10%', left: '10%'}, {top: '60%', left: '20%'}, 
+        {top: '30%', left: '50%'}, {top: '70%', left: '70%'}, 
+        {top: '15%', left: '80%'}
+      ];
+
+      shuffledIndices.forEach((targetIndex, i) => {
+        const btn = document.createElement('div');
+        btn.className = 'meteor-btn';
+        btn.innerText = targetWord[targetIndex];
+        btn.style.top = positions[i].top;
+        btn.style.left = positions[i].left;
+        
+        btn.onclick = () => {
+          // Cek apakah huruf yang diklik sesuai dengan urutan targetWord
+          if (targetWord[targetIndex] === targetWord[meteorStep]) {
+            btn.classList.add('hidden-meteor'); // Hilang
+            document.querySelectorAll('.meteor-slot')[meteorStep].innerText = targetWord[meteorStep];
+            meteorStep++;
+            if (meteorStep === targetWord.length) {
+              setTimeout(() => goToScreen('screen-finale'), 1200);
+            }
+          } else {
+            // Salah pilih meteor
+            btn.style.animation = 'shake 0.4s';
+            setTimeout(() => btn.style.animation = '', 400);
+            if (navigator.vibrate) navigator.vibrate(200);
+          }
+        };
+        area.appendChild(btn);
+      });
+    }
+
+    const finalMsg = "Selamat atas gelar barunya sayang! Semua pengorbanan kamu hari ini terbayar lunas. Aku janji bakal terus nemenin kamu melangkah lebih jauh. Let's conquer the universe together! 💖";
+    
+    function typeWriterFinale() {
+      const el = document.getElementById('final-typewriter');
+      el.innerHTML = '';
+      let i = 0;
+      function type() {
+        if (i < finalMsg.length) {
+          el.innerHTML += finalMsg.charAt(i);
+          i++;
+          setTimeout(type, 40);
+        }
+      }
+      setTimeout(type, 800);
+    }
+
+    function initOrbitGallery() {
+      const orbitCenter = document.getElementById('orbit-center');
+      const items = document.querySelectorAll('.orbit-item');
+      let angleOffset = 0;
+      let isPaused = false;
+
+      // Event listener buat pause pas disentuh/di-hover
+      items.forEach((item) => {
+        item.addEventListener('touchstart', (e) => {
+          e.preventDefault(); isPaused = true; item.classList.add('paused');
+        }, {passive: false});
+        item.addEventListener('touchend', (e) => {
+          e.preventDefault(); isPaused = false; item.classList.remove('paused');
+        });
+        item.addEventListener('mouseenter', () => { isPaused = true; item.classList.add('paused'); });
+        item.addEventListener('mouseleave', () => { isPaused = false; item.classList.remove('paused'); });
+      });
+
+      function animate() {
+        if (!isPaused) angleOffset += 0.003;
+        
+        // Perbaikan: gunakan ukuran orbit-center langsung & batasi jari-jari maksimal
+        const rect = orbitCenter.getBoundingClientRect();
+        const rx = Math.min(rect.width * 0.4, 180); 
+        const ry = Math.min(rect.width * 0.12, 60); // Perspektif 3D
+
+        items.forEach((item, i) => {
+          const angle = (i / items.length) * Math.PI * 2 + angleOffset;
+          const x = Math.cos(angle) * rx;
+          const y = Math.sin(angle) * ry;
+          const z = Math.sin(angle); // Z-Depth
+          
+          let scale = 0.6 + ((z + 1) / 2) * 0.5;
+          if (item.classList.contains('paused')) scale = 2.0; // Membesar maksimal saat disentuh
+          
+          item.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`;
+          item.style.zIndex = Math.round((z + 1) * 100) + 10;
+          if (!item.classList.contains('paused')) {
+             item.style.filter = `brightness(${0.4 + ((z + 1) / 2) * 0.6})`;
+          }
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+  </script>
+</body>
+</html>
