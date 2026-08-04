@@ -538,71 +538,54 @@
       75% { transform: translateX(-10px); }
     }
 
-    /* ===== FINALE ===== */
-    #screen-finale {
-      touch-action: auto;
-      overflow: hidden;
+    /* ===== FINALE (NEW GALLERY) ===== */
+    #screen-finale { 
+      touch-action: auto; 
+      overflow: hidden; 
     }
-
+    
     .beach-gallery {
-      position: relative;
-      width: 100%;
-      max-width: 500px;
-      height: 55vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: relative; 
+      width: 100%; 
+      max-width: 500px; 
+      max-height: 55vh; 
+      overflow-y: auto;
+      display: flex; 
+      flex-wrap: wrap; 
+      justify-content: center; 
+      gap: 15px; 
       margin-top: 20px;
+      padding: 10px;
     }
-
-    .center-shell {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #ffc87a, #e8886f);
-      box-shadow: 0 0 40px rgba(255, 200, 122, 0.4), 0 0 80px rgba(232, 136, 111, 0.2),
-                  inset -10px -10px 20px rgba(0, 0, 0, 0.3);
-      z-index: 50;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.5rem;
-      animation: shellGlow 3s ease-in-out infinite;
-    }
-
-    @keyframes shellGlow {
-      0%, 100% { box-shadow: 0 0 40px rgba(255, 200, 122, 0.4), 0 0 80px rgba(232, 136, 111, 0.2); }
-      50% { box-shadow: 0 0 60px rgba(255, 200, 122, 0.6), 0 0 120px rgba(232, 136, 111, 0.4); }
-    }
+    
+    .beach-gallery::-webkit-scrollbar { width: 0px; }
 
     .washed-item {
-      position: absolute;
-      top: 50%; left: 50%; 
-      margin-top: -55px; 
-      margin-left: -42.5px; 
-      width: 85px; height: 110px;
-      border: 2px solid rgba(255, 200, 122, 0.4);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-      background: #0a1628;
-      transform-origin: center center;
-      cursor: pointer;
-      transition: border-color 0.3s, box-shadow 0.3s;
-      opacity: 0;
+      position: relative; 
+      width: 100px; height: 130px; 
+      border: 4px solid #fdf5e6; 
+      border-bottom-width: 16px; 
+      border-radius: 4px;
+      overflow: hidden; 
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); 
+      background: #fdf5e6;
+      cursor: pointer; 
+      
+      opacity: 0; 
+      transform: scale(0.1); 
     }
-    .washed-item img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      pointer-events: none;
+    
+    .washed-item img { 
+      width: 100%; height: 100%; 
+      object-fit: cover; 
+      pointer-events: none; 
     }
-    .washed-item.paused {
-      border-color: #ff8844 !important;
-      box-shadow: 0 15px 50px rgba(255, 136, 68, 0.6) !important;
-      z-index: 1000 !important;
-      filter: brightness(1.2) !important;
-      transform: scale(1.8) !important;
-      animation-play-state: paused !important;
+    
+    .washed-item:hover, .washed-item:active {
+      transform: scale(1.3) rotate(0deg) !important;
+      box-shadow: 0 15px 30px rgba(255, 136, 68, 0.6);
+      z-index: 100;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
     }
 
     .confetti {
@@ -657,7 +640,7 @@
   <!-- ===== SCREEN: KUIS ===== -->
   <section id="screen-kuis" class="screen active">
     <div class="glass-box">
-      <h2>Misi 1: Kumpulkan Air 💧</h2>
+      <h2>Misi 1: Jawab Pertanyaan Quiz ⛵</h2>
       <p id="quiz-question">Pertanyaan kuis muncul di sini...</p>
       
       <div class="boat-container" id="boat-icon">⛵</div>
@@ -675,7 +658,7 @@
     <div class="glass-box">
       <h2>Hadiah Misi 1 Terbuka! 🎁</h2>
       <img src="https://placehold.co/300x300/0a1628/ffc87a?text=🎫+Bebas+Ngomel&font=outfit" alt="Hadiah 1" class="reward-img">
-      <p>Yey air terkumpul! Ini hadiah pertama buat kamu: <b>Voucher Bebas Ngomel 1 Hari Full!</b> (Bisa ditukarkan kapan aja 💖)</p>
+      <p>Yey jawaban benar! Ini hadiah pertama buat kamu: <b>Legooooo, semangat nyusunnya nantiii!</b></p>
       <button class="theme-btn" onclick="goToScreen('screen-starfish')">Lanjut Misi 2 🌟</button>
     </div>
   </section>
@@ -704,7 +687,7 @@
     <div class="glass-box">
       <h2>Hadiah Misi 2 Terbuka! 🎁</h2>
       <img src="https://placehold.co/300x300/0a1628/48cae4?text=🍣+Makan+Enak&font=outfit" alt="Hadiah 2" class="reward-img">
-      <p>Wah bentuk bintang laut! Hadiah kedua buat yang abis sidang: <b>Voucher Makan Enak Sepuasnya Ditraktir Ayang!</b> 🍣🍱</p>
+      <p>Wah bentuk toga! Hadiah kedua buat yang abis sidang: <b>Bucket Bungaaa, selamat nanti dipajang yaa di kamar!</b></p>
       <button class="theme-btn" onclick="goToScreen('screen-bottle')">Lanjut Misi Terakhir 🍾</button>
     </div>
   </section>
@@ -729,11 +712,9 @@
     </div>
     
     <div class="beach-gallery" id="beach-center">
-      <div class="center-shell">🐚</div>
       <!-- Foto akan diisi otomatis lewat Google Apps Script (Drive) -->
     </div>
   </section>
-
 
   <script>
     // ===== BACKGROUND DECORATIONS =====
@@ -872,9 +853,9 @@
 
     // ===== QUIZ =====
     const quizData = [
-      { q: "Siapa supporter nomor 1 kamu waktu begadang ngetik revisian?", options: ["Kucing Jalanan", "Aku (Pacar Kamu) 💖", "Satpam Kampus"], answer: 1 },
-      { q: "Minuman penyelamat nyawa waktu Bab 4 stuck?", options: ["Air Mata", "Kopi Susu ☕", "Oli Samping"], answer: 1 },
-      { q: "Gelar apa yang paling aku tunggu dari kamu kedepannya?", options: ["Nyonya (Nama Gw) 👰‍♀️", "Direktur PT", "Menteri Keuangan"], answer: 0 }
+      { q: "Apa judul skripsi kamu?", options: ["PENERAPAN ALGORITMA BAYES DALAM KLASIFIKASI RISIKO OSTEOPOROSIS DAN IDENTIFIKASI FAKTOR YANG MEMPENGARUHINYA", "PENERAPAN ALGORITMA C4.5 DALAM KLASIFIKASI RISIKO OSTEOPOROSIS DAN IDENTIFIKASI FAKTOR YANG MEMPENGARUHINYA ", "PENERAPAN ALGORITMA C4.5 DALAM KLASIFIKASI RISIKO JANTUNG DAN IDENTIFIKASI FAKTOR YANG MEMPENGARUHINYA"], answer: 1 },
+      { q: "Siapa orang yang berada di nomor 3 pada lembar pengesahan?", options: ["Dospem", "Aku", "Teman - teman"], answer: 1 },
+      { q: "Gelar apa yang paling aku tunggu dari kamu kedepannya?", options: ["Istri", "S.Kom", "Presiden"], answer: 0 }
     ];
     let currentQuestion = 0;
 
@@ -1141,124 +1122,56 @@
    async function initBeachGallery() {
       const galleryEl = document.getElementById('beach-center');
       
-      // 1. Bersihkan area galeri dulu supaya foto ga tertumpuk/double kalau ke-load ulang
-      galleryEl.innerHTML = '<div class="center-shell">🐚</div>';
+      // Bersihkan galeri
+      galleryEl.innerHTML = '';
       
       const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby1xzwDnbNw1NKLZXCVUVj2xTy5Jihmnm3O77zpyJS2gyYpYVLZRvXJsaSLxGA7laCovw/exec'; 
 
       try {
-        // 2. Langsung tarik data aja, hapus logika IF yang bikin error sebelumnya
         const response = await fetch(SCRIPT_URL, { redirect: "follow" });
         const imageUrls = await response.json();
 
         imageUrls.forEach((url, i) => {
           const item = document.createElement('div');
           item.className = 'washed-item';
+          
+          // Bikin rotasi acak (-12 sampai 12 derajat) biar fotonya keliatan berserakan natural
+          const rot = (Math.random() - 0.5) * 24; 
+          item.style.setProperty('--rot', `${rot}deg`);
+          
           item.innerHTML = `<img src="${url}" alt="Foto ${i+1}">`;
           galleryEl.appendChild(item);
         });
       } catch (error) {
         console.error("Yah, gagal ngambil foto dari Drive:", error);
-        // Ini cuma jalan kalau misal internet putus
+        // Fallback kalau error
         for(let i=1; i<=6; i++) {
           const item = document.createElement('div');
           item.className = 'washed-item';
+          const rot = (Math.random() - 0.5) * 24; 
+          item.style.setProperty('--rot', `${rot}deg`);
           item.innerHTML = `<img src="https://picsum.photos/id/101${i}/300/400" alt="Dummy">`;
           galleryEl.appendChild(item);
         }
       }
 
       const items = document.querySelectorAll('.washed-item');
-      const totalItems = items.length;
       
-      // 3. Bikin radius putaran responsif!
-      // Kalau dibuka di PC (lebar layar > 768px), radiusnya dibesarin. Kalau di HP, radius normal.
-      const isDesktop = window.innerWidth > 768;
-      const radiusX = isDesktop ? 280 : 140; 
-      const radiusY = isDesktop ? 200 : 110;
-
+      // Animasi fotonya muncul satu-satu (Pop-in)
       items.forEach((item, index) => {
-        const startDelay = index * 0.3;
-        const orbitDuration = 20 + Math.random() * 5;
-
-        item.style.transition = `all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${startDelay}s`;
-        item.style.zIndex = Math.round(50);
+        const delay = index * 0.15; // Jeda antar foto 0.15 detik
+        const rot = item.style.getPropertyValue('--rot'); // Ambil rotasi acak tadi
+        
+        item.style.transition = `all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${delay}s`;
 
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             item.style.opacity = '1';
-            item.style.transform = `scale(0.1)`; 
+            item.style.transform = `scale(1) rotate(${rot})`; 
           });
         });
-
-        setTimeout(() => {
-          item.style.transition = 'none';
-          startOrbitAnimation(item, index, totalItems, radiusX, radiusY, orbitDuration);
-        }, (startDelay + 1.5) * 1000);
-
-        let isPaused = false;
-        item.addEventListener('touchstart', (e) => {
-          e.preventDefault();
-          isPaused = true;
-          item.classList.add('paused');
-          item.dataset.orbitPaused = 'true';
-        }, { passive: false });
-        
-        item.addEventListener('touchend', (e) => {
-          e.preventDefault();
-          isPaused = false;
-          item.classList.remove('paused');
-          item.dataset.orbitPaused = 'false';
-        });
-        
-        // Tambahan supaya di PC kalau di-hover pakai mouse juga ikut kepause/membesar
-        item.addEventListener('mouseenter', () => {
-          isPaused = true;
-          item.classList.add('paused');
-          item.dataset.orbitPaused = 'true';
-        });
-        item.addEventListener('mouseleave', () => {
-          isPaused = false;
-          item.classList.remove('paused');
-          item.dataset.orbitPaused = 'false';
-        });
       });
-    }
-
-    function startOrbitAnimation(item, index, total, rx, ry, duration) {
-      const startAngle = (index / total) * Math.PI * 2;
-      const startTime = performance.now();
-      const speed = (Math.PI * 2) / (duration * 1000);
-      const tiltFactor = 0.6; 
-
-      function animate(now) {
-        if (item.dataset.orbitPaused === 'true') {
-          requestAnimationFrame(animate);
-          return;
-        }
-
-        const elapsed = now - startTime;
-        const angle = startAngle + elapsed * speed;
-
-        const x = rx * Math.cos(angle);
-        const y = ry * Math.sin(angle) * tiltFactor;
-
-        const zFactor = (Math.sin(angle) + 1) / 2; 
-        const scale = 0.6 + zFactor * 0.5;
-        const brightness = 0.7 + zFactor * 0.3;
-        const zIndex = Math.round(50 + zFactor * 30);
-        const rotation = Math.cos(angle) * 12;
-
-        item.style.transform = `translate(${x}px, ${y}px) scale(${scale}) rotate(${rotation}deg)`;
-        item.style.filter = `brightness(${brightness})`;
-        item.style.zIndex = zIndex;
-
-        requestAnimationFrame(animate);
-      }
-
-      requestAnimationFrame(animate);
     }
   </script>
 </body>
 </html>
-
